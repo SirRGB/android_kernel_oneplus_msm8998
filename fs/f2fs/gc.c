@@ -15,7 +15,6 @@
 #include <linux/freezer.h>
 #include <linux/fb.h>
 #include <linux/power_supply.h>
-#include <linux/ratelimit.h>
 
 #include "f2fs.h"
 #include "node.h"
@@ -31,12 +30,12 @@ static inline void rapid_gc_set_wakelock(struct f2fs_sb_info *sbi,
 {
 	if (val) {
 		if (!gc_th->gc_wakelock.active) {
-			pr_info_ratelimited("F2FS: Catching wakelock for rapid GC");
+			f2fs_info(sbi, "Catching wakelock for rapid GC");
 			__pm_stay_awake(&gc_th->gc_wakelock);
 		}
 	} else {
 		if (gc_th->gc_wakelock.active) {
-			pr_info_ratelimited("F2FS: Unlocking wakelock for rapid GC");
+			f2fs_info(sbi, "Unlocking wakelock for rapid GC");
 			__pm_relax(&gc_th->gc_wakelock);
 		}
 	}
@@ -142,7 +141,7 @@ do_gc:
 			wait_ms = gc_th->no_gc_sleep_time;
 			rapid_gc_set_wakelock(sbi, gc_th, false);
 			sbi->gc_mode = GC_NORMAL;
-			pr_info_ratelimited("F2FS: "
+			f2fs_info(sbi,
 				"No more rapid GC victim found, "
 				"sleeping for %u ms", wait_ms);
 
@@ -151,7 +150,7 @@ do_gc:
 			 * that would not be read again anytime soon.
 			 */
 			mm_drop_caches(3);
-			pr_info_ratelimited("F2FS: dropped caches");
+			f2fs_info(sbi, "dropped caches");
 		}
 
 		trace_f2fs_background_gc(sbi->sb, wait_ms,
@@ -243,7 +242,7 @@ static void f2fs_start_rapid_gc(void)
 			wake_up_interruptible_all(&sbi->gc_thread->gc_wait_queue_head);
 			wake_up_discard_thread(sbi, true);
 		} else {
-			pr_info_ratelimited("F2FS: Invalid blocks lower than %d%%,"
+			f2fs_info(sbi, "Invalid blocks lower than %d%%,"
 					"skipping rapid GC (%u / (%u - %u))",
 					RAPID_GC_LIMIT_INVALID_BLOCK,
 					invalid_blocks,
