@@ -84,13 +84,6 @@ endif
 
 CHECKFLAGS	+= -D__aarch64__
 
-# msm8998 optimizations
-arch-$(CONFIG_ARCH_MSM8998)	:= $(call cc-option,-march=armv8-a+crc+crypto -mcpu=cortex-a73.cortex-a53+crc+crypto)
-tune-$(CONFIG_ARCH_MSM8998)	:= -mtune=cortex-a73.cortex-a53
-
-KBUILD_CFLAGS	+= $(arch-y) $(tune-y)
-KBUILD_AFLAGS	+= $(arch-y) $(tune-y)
-
 ifeq ($(CONFIG_ARM64_MODULE_CMODEL_LARGE), y)
 KBUILD_CFLAGS_MODULE	+= -mcmodel=large
 endif
