@@ -9943,14 +9943,11 @@ static int msm_asoc_machine_remove(struct platform_device *pdev)
 
 	if (pdata->us_p_power)
 		regulator_put(pdata->us_p_power);
-	if (pdata->us_n_power)
+	if (pdata->us_p_power)
 		regulator_put(pdata->us_n_power);
 #endif
 
-	if (pdata->us_euro_gpio > 0) {
-		gpio_free(pdata->us_euro_gpio);
-		pdata->us_euro_gpio = 0;
-	}
+	gpio_free(pdata->us_euro_gpio);
 	i2s_auxpcm_deinit();
 
 	snd_soc_unregister_card(card);
