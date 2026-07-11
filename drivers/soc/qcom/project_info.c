@@ -578,18 +578,7 @@ int __init init_project_info(void)
 
 	get_ddr_manufacture_name();
 
-	if (totalram_pages > 6*(1<<18))
-		ddr_size = 8;
-	else if (totalram_pages > 5*(1<<18))
-		ddr_size = 6;
-	else if (totalram_pages > 4*(1<<18))
-		ddr_size = 5;
-	else if (totalram_pages > 3*(1<<18))
-		ddr_size = 4;
-	else if (totalram_pages > 2*(1<<18))
-		ddr_size = 3;
-	else if (totalram_pages > 1*(1<<18))
-		ddr_size = 2;
+	ddr_size = 6;
 
 	snprintf(ddr_version, sizeof(ddr_version), "size_%dG_r_%d_c_%d",
 		ddr_size, project_info_desc->ddr_row,
